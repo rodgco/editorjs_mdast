@@ -80,7 +80,7 @@ The project is organized with a clear module structure:
 ### Editor.js to MDAST:
 - paragraph → paragraph
 - header → heading
-- list → list
+- list → list (including nested lists)
 - image → image
 - code → code
 - quote → blockquote
@@ -89,8 +89,17 @@ The project is organized with a clear module structure:
 ### MDAST to Editor.js:
 - paragraph → paragraph
 - heading → header
-- list → list
+- list → list (including nested lists)
 - code → code
 - image → image
 - blockquote → quote
 - thematicBreak → delimiter
+
+### Nested Lists Support
+
+The library provides full support for nested lists in both directions:
+
+- **Editor.js format**: Uses the official nested list format with items as objects containing `content` and `items[]`
+- **MDAST format**: Uses standard MDAST structure with nested lists as children of list items
+- **Arbitrary nesting**: Supports unlimited nesting depth
+- **Mixed list types**: Supports different list styles at different nesting levels

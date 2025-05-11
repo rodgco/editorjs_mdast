@@ -37,8 +37,36 @@ export function convertHeadingToEditorJs(node: MdastNode): EditorJSBlock {
  */
 export function convertListToEditorJs(node: MdastNode): EditorJSBlock {
   const items = node.children?.map(item => {
-    // A list item usually contains at least one paragraph
-    return getTextContent(item);
+    // Verify we have a list item
+    if (item.type !== 'listItem') {
+      return "";
+    }
+
+    // Process the list item's children
+    const itemChildren = item.children || [];
+
+    // No children means empty item
+    if (itemChildren.length === 0) {
+      return { content: "" };
+    }
+
+    // First child is usually the content paragraph
+    const contentNode = itemChildren[0];
+    const content = getTextContent(contentNode);
+
+    // Check if there's a nested list
+    const nestedList = itemChildren.find(child => child.type === 'list');
+
+    if (nestedList) {
+      // We have a nested list
+      return {
+        content,
+        items: processNestedList(nestedList)
+      };
+    }
+
+    // Simple item with just content
+    return content;
   }) || [];
 
   return {
@@ -49,6 +77,48 @@ export function convertListToEditorJs(node: MdastNode): EditorJSBlock {
       items,
     },
   };
+}
+
+/**
+ * Helper function to process nested lists
+ */
+function processNestedList(node: MdastNode): any[] {
+  if (!node.children) {
+    return [];
+  }
+
+  return node.children.map(item => {
+    // Verify we have a list item
+    if (item.type !== 'listItem') {
+      return { content: "" };
+    }
+
+    // Process the list item's children
+    const itemChildren = item.children || [];
+
+    // No children means empty item
+    if (itemChildren.length === 0) {
+      return { content: "" };
+    }
+
+    // First child is usually the content paragraph
+    const contentNode = itemChildren[0];
+    const content = getTextContent(contentNode);
+
+    // Check if there's a nested list
+    const nestedList = itemChildren.find(child => child.type === 'list');
+
+    if (nestedList) {
+      // We have another level of nesting
+      return {
+        content,
+        items: processNestedList(nestedList)
+      };
+    }
+
+    // Simple item with just content
+    return { content };
+  });
 }
 
 /**

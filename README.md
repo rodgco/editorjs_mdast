@@ -92,10 +92,39 @@ The library is organized into two main modules:
 | paragraph       | paragraph     | Text content is preserved   |
 | header          | heading       | Level is preserved          |
 | list            | list          | Ordered/unordered preserved |
+| nested list     | nested list   | Full nested structure preserved |
 | image           | image         | URL and caption preserved   |
 | code            | code          | Language is preserved       |
 | quote           | blockquote    | Caption becomes attribution |
 | delimiter       | thematicBreak | Horizontal rule            |
+
+### Nested Lists Support
+
+This library fully supports nested lists conversion between Editor.js and MDAST. It works with:
+
+- Lists with arbitrary nesting depth
+- Mixed ordered/unordered nested lists
+- The official Editor.js nested list format
+
+Example Editor.js nested list structure:
+```javascript
+{
+  type: "list",
+  data: {
+    style: "unordered",
+    items: [
+      "Simple item",
+      {
+        content: "Item with nested list",
+        items: [
+          { content: "Nested item 1" },
+          { content: "Nested item 2" }
+        ]
+      }
+    ]
+  }
+}
+```
 
 ## Development
 
