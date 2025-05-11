@@ -1,7 +1,7 @@
 {
   "name": "editorjs_mdast",
   "version": "0.1.0",
-  "description": "Convert Editor.js output to MDAST (Markdown Abstract Syntax Tree) and vice versa",
+  "description": "Two-way conversion between Editor.js JSON blocks and MDAST - Markdown Abstract Syntax Tree",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
