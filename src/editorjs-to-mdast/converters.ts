@@ -46,95 +46,27 @@ export function convertHeader(block: EditorJSBlock): MdastHeading {
  * Convert a list block to MDAST list
  */
 export function convertList(block: EditorJSBlock): MdastList {
-  // Handle both string items and nested list items
-  const items = (block.data.items || []).map((item: string | any): MdastListItem => {
-    // Check if this is a nested list item (object with content and items)
-    if (typeof item === 'object' && item !== null) {
-      const children: MdastNode[] = [
-        // First add the content as a paragraph
+  const items = (block.data.items || []).map(
+    (item: string): MdastListItem => ({
+      type: 'listItem',
+      children: [
         {
           type: 'paragraph',
           children: [
             {
               type: 'text',
-              value: item.content || '',
+              value: item,
             },
           ],
-        }
-      ];
-
-      // If there are nested items, recursively convert them to a nested list
-      if (Array.isArray(item.items) && item.items.length > 0) {
-        children.push(
-          convertNestedList(item.items, block.data.style)
-        );
-      }
-
-      return {
-        type: 'listItem',
-        children,
-      };
-    } else {
-      // Handle simple string items (non-nested)
-      return {
-        type: 'listItem',
-        children: [
-          {
-            type: 'paragraph',
-            children: [
-              {
-                type: 'text',
-                value: item,
-              },
-            ],
-          },
-        ],
-      };
-    }
-  });
+        },
+      ],
+    })
+  );
 
   return {
     type: 'list',
     ordered: block.data.style === 'ordered',
     children: items,
-  };
-}
-
-/**
- * Helper function to convert nested list items
- */
-function convertNestedList(items: any[], style: string): MdastList {
-  const listItems = items.map((item): MdastListItem => {
-    const children: MdastNode[] = [
-      // First add the content as a paragraph
-      {
-        type: 'paragraph',
-        children: [
-          {
-            type: 'text',
-            value: typeof item === 'object' ? (item.content || '') : (item || ''),
-          },
-        ],
-      }
-    ];
-
-    // If there are nested items, recursively convert them
-    if (typeof item === 'object' && Array.isArray(item.items) && item.items.length > 0) {
-      children.push(
-        convertNestedList(item.items, style)
-      );
-    }
-
-    return {
-      type: 'listItem',
-      children,
-    };
-  });
-
-  return {
-    type: 'list',
-    ordered: style === 'ordered',
-    children: listItems,
   };
 }
 

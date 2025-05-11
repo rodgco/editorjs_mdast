@@ -69,7 +69,7 @@ describe('mdastToEditorJs', () => {
     ]);
   });
 
-  it('should convert a simple list node', () => {
+  it('should convert a list node', () => {
     const mdast: MdastRoot = {
       type: 'root',
       children: [
@@ -111,7 +111,7 @@ describe('mdastToEditorJs', () => {
     };
 
     const result = mdastToEditorJs(mdast);
-
+    
     expect(result.blocks).toEqual([
       {
         id: 'test-uuid',
@@ -119,150 +119,6 @@ describe('mdastToEditorJs', () => {
         data: {
           style: 'ordered',
           items: ['First item', 'Second item'],
-        },
-      },
-    ]);
-  });
-
-  it('should convert a nested list node', () => {
-    const mdast: MdastRoot = {
-      type: 'root',
-      children: [
-        {
-          type: 'list',
-          ordered: false,
-          children: [
-            // First item (simple)
-            {
-              type: 'listItem',
-              children: [
-                {
-                  type: 'paragraph',
-                  children: [
-                    {
-                      type: 'text',
-                      value: 'First item',
-                    },
-                  ],
-                },
-              ],
-            },
-            // Second item with nested list
-            {
-              type: 'listItem',
-              children: [
-                {
-                  type: 'paragraph',
-                  children: [
-                    {
-                      type: 'text',
-                      value: 'Second item with nested list',
-                    },
-                  ],
-                },
-                {
-                  type: 'list',
-                  ordered: false,
-                  children: [
-                    // Nested item 1
-                    {
-                      type: 'listItem',
-                      children: [
-                        {
-                          type: 'paragraph',
-                          children: [
-                            {
-                              type: 'text',
-                              value: 'Nested item 1',
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    // Nested item 2 with deeper nesting
-                    {
-                      type: 'listItem',
-                      children: [
-                        {
-                          type: 'paragraph',
-                          children: [
-                            {
-                              type: 'text',
-                              value: 'Nested item with deeper nesting',
-                            },
-                          ],
-                        },
-                        {
-                          type: 'list',
-                          ordered: true, // Note: different list style
-                          children: [
-                            // Deep nested item
-                            {
-                              type: 'listItem',
-                              children: [
-                                {
-                                  type: 'paragraph',
-                                  children: [
-                                    {
-                                      type: 'text',
-                                      value: 'Deep nested item',
-                                    },
-                                  ],
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            // Third item (simple)
-            {
-              type: 'listItem',
-              children: [
-                {
-                  type: 'paragraph',
-                  children: [
-                    {
-                      type: 'text',
-                      value: 'Third item',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-
-    const result = mdastToEditorJs(mdast);
-
-    expect(result.blocks).toEqual([
-      {
-        id: 'test-uuid',
-        type: 'list',
-        data: {
-          style: 'unordered',
-          items: [
-            'First item',
-            {
-              content: 'Second item with nested list',
-              items: [
-                { content: 'Nested item 1' },
-                {
-                  content: 'Nested item with deeper nesting',
-                  items: [
-                    { content: 'Deep nested item' }
-                  ]
-                }
-              ]
-            },
-            'Third item'
-          ],
         },
       },
     ]);
