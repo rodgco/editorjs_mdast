@@ -47,20 +47,24 @@ export function convertHeader(block: EditorJSBlock): MdastHeading {
  */
 export function convertList(block: EditorJSBlock): MdastList {
   const items = (block.data.items || []).map(
-    (item: string): MdastListItem => ({
-      type: 'listItem',
-      children: [
-        {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'text',
-              value: item,
-            },
-          ],
-        },
-      ],
-    })
+    (item: string | { content: string }): MdastListItem => {
+      const itemText = typeof item === 'string' ? item : item.content || '';
+
+      return {
+        type: 'listItem',
+        children: [
+          {
+            type: 'paragraph',
+            children: [
+              {
+                type: 'text',
+                value: itemText,
+              },
+            ],
+          },
+        ],
+      };
+    }
   );
 
   return {

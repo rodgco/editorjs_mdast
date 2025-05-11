@@ -38,7 +38,8 @@ export function convertHeadingToEditorJs(node: MdastNode): EditorJSBlock {
 export function convertListToEditorJs(node: MdastNode): EditorJSBlock {
   const items = node.children?.map(item => {
     // A list item usually contains at least one paragraph
-    return getTextContent(item);
+    const content = getTextContent(item);
+    return { content };
   }) || [];
 
   return {
@@ -141,11 +142,16 @@ function getTextContent(node: MdastNode): string {
   if (node.type === 'text') {
     return node.value || '';
   }
-  
+
   if (node.children && node.children.length > 0) {
     return node.children.map(getTextContent).join('');
   }
-  
+
+  // For nodes with no children but with a value property (like code blocks)
+  if (node.value) {
+    return node.value;
+  }
+
   return '';
 }
 
